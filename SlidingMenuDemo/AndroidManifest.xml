@@ -20,6 +20,10 @@
 
         <!-- App slides right to reveal menu underneath -->
         <activity android:name=".HorzScrollWithListMenu" android:label="HorzScrollWithListMenu">
+               <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
         <!-- -->
@@ -28,10 +32,7 @@
 
         <!-- Menu -->
         <activity android:name=".MenuActivity" android:label="MenuActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+         
         </activity>
     </application>
 </manifest>

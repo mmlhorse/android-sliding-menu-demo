@@ -9,9 +9,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,33 +21,27 @@
  */
 package grimbo.android.demo.slidingmenu;
 
-import grimbo.android.demo.slidingmenu.MyHorizontalScrollView.SizeCallback;
-
-import java.util.Date;
-
+import grimbo.android.demo.slidingmenu.MenuSlidingHorizontalScrollView.SizeCallback;
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 /**
  * This demo uses a custom HorizontalScrollView that ignores touch events, and therefore does NOT allow manual scrolling.
- * 
+ *
  * The only scrolling allowed is scrolling in code triggered by the menu button.
- * 
+ *
  * When the button is pressed, both the menu and the app will scroll. So the menu isn't revealed from beneath the app, it
  * adjoins the app and moves with the app.
  */
 public class HorzScrollWithListMenu extends Activity {
-    MyHorizontalScrollView scrollView;
+    MenuSlidingHorizontalScrollView scrollView;
     View menu;
     View app;
     ImageView btnSlide;
@@ -56,11 +50,11 @@ public class HorzScrollWithListMenu extends Activity {
     int btnWidth;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         LayoutInflater inflater = LayoutInflater.from(this);
-        scrollView = (MyHorizontalScrollView) inflater.inflate(R.layout.horz_scroll_with_list_menu, null);
+        scrollView = (MenuSlidingHorizontalScrollView) inflater.inflate(R.layout.horz_scroll_with_list_menu, null);
         setContentView(scrollView);
 
         menu = inflater.inflate(R.layout.horz_scroll_menu, null);
@@ -74,7 +68,7 @@ public class HorzScrollWithListMenu extends Activity {
         ViewUtils.initListView(this, listView, "Menu ", 30, android.R.layout.simple_list_item_1);
 
         btnSlide = (ImageView) tabBar.findViewById(R.id.BtnSlide);
-        btnSlide.setOnClickListener(new ClickListenerForScrolling(scrollView, menu));
+        btnSlide.setOnClickListener(new ClickListenerForScrolling());
 
         final View[] children = new View[] { menu, app };
 
@@ -86,42 +80,11 @@ public class HorzScrollWithListMenu extends Activity {
     /**
      * Helper for examples with a HSV that should be scrolled by a menu View's width.
      */
-    static class ClickListenerForScrolling implements OnClickListener {
-        HorizontalScrollView scrollView;
-        View menu;
-        /**
-         * Menu must NOT be out/shown to start with.
-         */
-        boolean menuOut = false;
-
-        public ClickListenerForScrolling(HorizontalScrollView scrollView, View menu) {
-            super();
-            this.scrollView = scrollView;
-            this.menu = menu;
-        }
+    private class ClickListenerForScrolling implements OnClickListener {
 
         @Override
-        public void onClick(View v) {
-            Context context = menu.getContext();
-            String msg = "Slide " + new Date();
-            Toast.makeText(context, msg, 1000).show();
-            System.out.println(msg);
-
-            int menuWidth = menu.getMeasuredWidth();
-
-            // Ensure menu is visible
-            menu.setVisibility(View.VISIBLE);
-
-            if (!menuOut) {
-                // Scroll to 0 to reveal menu
-                int left = 0;
-                scrollView.smoothScrollTo(left, 0);
-            } else {
-                // Scroll to menuWidth so menu isn't on screen.
-                int left = menuWidth;
-                scrollView.smoothScrollTo(left, 0);
-            }
-            menuOut = !menuOut;
+        public void onClick(final View v) {
+            scrollView.toggleMenu();
         }
     }
 
@@ -133,7 +96,7 @@ public class HorzScrollWithListMenu extends Activity {
         int btnWidth;
         View btnSlide;
 
-        public SizeCallbackForMenu(View btnSlide) {
+        public SizeCallbackForMenu(final View btnSlide) {
             super();
             this.btnSlide = btnSlide;
         }
@@ -145,7 +108,7 @@ public class HorzScrollWithListMenu extends Activity {
         }
 
         @Override
-        public void getViewSize(int idx, int w, int h, int[] dims) {
+        public void getViewSize(final int idx, final int w, final int h, final int[] dims) {
             dims[0] = w;
             dims[1] = h;
             final int menuIdx = 0;
